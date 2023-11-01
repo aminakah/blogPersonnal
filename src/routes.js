@@ -60,10 +60,10 @@ import EditPost from "layouts/post/edit";
 import Icon from "@mui/material/Icon";
 import AddFriend from "layouts/mes-amis/add";
 import AddComment from "layouts/commentaire/add";
-import Friend from "layouts/mes-amis/data/postsTableData";
-import AllPostsTable from "layouts/all-Posts/data/postsTableData";
+import Friend from "layouts/mes-amis/listeUser";
 import AllPost from "layouts/all-Posts";
 import DetailsPost from "layouts/all-Posts/details";
+import MyFriend from "layouts/mes-amis/friendship";
 
 const routes = [
   {
@@ -84,10 +84,18 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Mes amis",
+    name: "mes amis",
+    key: "MyFriend",
+    icon: <Icon fontSize="small">article</Icon>,
+    route: "/myFriend",
+    component: <MyFriend />,
+  },
+  {
+    type: "collapse",
+    name: "Users",
     key: "mesAmis",
     icon: <Icon fontSize="small">person</Icon>,
-    route: "/mes-amis",
+    route: "/listUser",
     component: <Friend />,
   },
   {
@@ -112,14 +120,7 @@ const routes = [
     route: "/authentication/sign-in",
     component: <SignIn />,
   },
-  // {
-  //   type: "collapse",
-  //   name: "Utilisateur",
-  //   key: "user",
-  //   icon: <Icon fontSize="small">person</Icon>,
-  //   route: "/user",
-  //   component: <User />,
-  // },
+ ,
  
   {
     route: "/post/add",

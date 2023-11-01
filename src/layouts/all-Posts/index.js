@@ -60,8 +60,9 @@ function AllPost() {
   return (
     <DashboardLayout>
     <DashboardNavbar />
+    <h1>liste des postes  public</h1>
     {posts.map((post, index) => (
-     <Card key={index} sx={{ minWidth: 900 }}>
+     <Card key={index} sx={{ minWidth: 600 }}>
     <CardContent>
       <Typography variant="h5" component="div">
         {post.title}
@@ -72,7 +73,8 @@ function AllPost() {
 
   {/* Remplacez "details" par le chemin de la page de détails et post.id par l'identifiant du post */}
     <Button size="small" onClick={(e) => e.stopPropagation()}> {/* Utilisez stopPropagation pour éviter de déclencher à la fois la navigation et le changement du texte */}
-      {showFullText[index] ? 'Voir moins' : 'Voir plus'}
+      {/* {showFullText[index] ? 'Voir moins' : 'details'} */}
+     details
     </Button>
   </Link>
 

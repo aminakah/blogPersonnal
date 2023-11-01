@@ -19,8 +19,8 @@ import { PostService } from "services/post.service";
 const Details = () => {
   const { id } = useParams();
   const [posts, setPosts] = useState([]);
-  const [showFullText, setShowFullText] = useState([]); // Ajout d'un état pour gérer l'affichage du texte complet
-
+  // const [showFullText, setShowFullText] = useState([]); // Ajout d'un état pour gérer l'affichage du texte complet
+const [showFullText, setShowFullText] = useState(Array(posts.length).fill(false));
   useEffect(() => {
     
     // let token=localStorage.getItem("token");
@@ -53,6 +53,12 @@ const Details = () => {
     setShowFullText(updatedShowFullText);
   };
 
+  const toggleShowText = (index) => {
+    const newShowFullText = [...showFullText];
+    newShowFullText[index] = !newShowFullText[index];
+    setShowFullText(newShowFullText);
+  };
+  
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -63,21 +69,25 @@ const Details = () => {
               {post.title}
             </Typography>
             <Typography variant="body2">
-              {showFullText[index] ? post.body : post.body.slice(0, 255)}
-              <Link key="edit" to={`/details/${post.id}`} component={Link}>
-                <Button size="small" onClick={(e) => e.stopPropagation()}>
-                  {showFullText[index] ? "Voir moins" : "Voir plus"}
-                </Button>
-              </Link>
-               <CardActions>
-     
-    </CardActions> 
-    <Link key="addComment" to={`/addComment/${post.id}`} component={Link}>
+  {showFullText[index] ? (
+    post.body // Affiche le texte complet
+  ) : (
+    post.body.slice(0, 255) // Affiche une partie du texte
+  )}
+  <Button
+    size="small"
+    onClick={(e) => {
+      e.stopPropagation();
+      toggleShowText(index); // Appel de la fonction pour basculer entre "Voir plus" et "Voir moins"
+    }}
+  >
+    {showFullText[index] ? "Voir moins" : "Voir plus"} {/* Affiche "Voir moins" ou "Voir plus" en fonction de l'état */}
+  </Button>
+  {/* <CardActions> </CardActions> */}
+   <Link key="addComment" to={`/addComment/${post.id}`} component={Link}>
     <Button size="small">Commenter</Button>
-              </Link>
- 
-          <Button size="small">Aimer</Button>
-            </Typography>
+     </Link> 
+</Typography>
           </CardContent>
         </Card>
       ))}
