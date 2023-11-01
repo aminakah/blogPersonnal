@@ -52,7 +52,7 @@ const handleSubmit = (event) => {
         title: 'Succès',
         text: 'Article ajouté avec succès!',
       }).then(() => {
-        navigate("/posts");
+        navigate(`/details/${id}`);
       });
     })
     .catch((error) => {

@@ -24,6 +24,7 @@ import Footer from "examples/Footer";
 import { useNavigate,Link } from "react-router-dom";
 import React, { useState } from "react";
 import Swal from 'sweetalert2';
+import { PostService } from "services/post.service";
 
 
 function AddPost() {
@@ -55,7 +56,7 @@ const handleSubmit = (event) => {
     body,
     status,
   };
-  axios.post("http://127.0.0.1:8000/api/post", data)
+  PostService.addPost(data)
     .then(() => {
       Swal.fire({
         icon: 'success',

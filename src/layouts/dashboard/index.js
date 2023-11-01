@@ -15,36 +15,21 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
-import Grid from "@mui/material/Grid";
 
 // Material Dashboard 2 React components
-import MDBox from "components/MDBox";
 import { useEffect, useState } from "react";
-import axios from "axios";
 // Material Dashboard 2 React example components
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
-import Footer from "examples/Footer";
-import Box from "@mui/material/Box";
-import Pagination from "@mui/lab/Pagination";
 
-// Data
-import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
-import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
-
-// Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
-import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
 import {
-  AppBar,
-  Container,
   Typography,
   Card,
   CardContent,
   CardActions,
   Button,
 } from "@mui/material";
-import { DateRange, Person } from "@mui/icons-material";
+import { PostService } from "services/post.service";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -53,7 +38,7 @@ function Dashboard() {
   const [showFullText, setShowFullText] = useState(new Array(posts.length).fill(false));
 
   async function getPosts() {
-    const response = await axios.get("http://127.0.0.1:8000/api/allPosts");
+    const response = await PostService.getAllPosts();
     return response.data;
   }
 

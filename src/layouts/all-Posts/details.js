@@ -14,32 +14,35 @@ import {
 import DashboardLayout from "examples/LayoutContainers/DashboardLayout";
 import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import { PostService } from "services/post.service";
+import { Avatar } from "@material-ui/core";
+import { MergeTypeTwoTone } from "@mui/icons-material";
+
+const Style = {
+  paddingTop: {
+    paddingTop: '4px'
+  }
+}
 
 // Composant Details
 const Details = () => {
   const { id } = useParams();
   const [posts, setPosts] = useState([]);
-  // const [showFullText, setShowFullText] = useState([]); // Ajout d'un état pour gérer l'affichage du texte complet
-const [showFullText, setShowFullText] = useState(Array(posts.length).fill(false));
+  const [comments, setComments] = useState([]);
+  const [showFullText, setShowFullText] = useState(Array(posts.length).fill(false));
   useEffect(() => {
-    
-    // let token=localStorage.getItem("token");
-    // axios.request({
-    //   headers: {
-    //     Authorization: `Bearer ${token}`
-    //   },
-    //   method: "GET",
-    //   url: `http://127.0.0.1:8000/api/posts/${id}`
-    // }).then(response => {
-    //   console.log(response.data);
-    //     setPosts(response.data);
-
-    // });
-    // PostService.getPostById(id)
     PostService.getPostsById(id)
       .then(response => {
         setPosts(response.data);
+        const id = response.data[0].id;
         setShowFullText(new Array(response.data.length).fill(false)); // Initialisation de showFullText
+        PostService.getCommentSByPostId(id)
+        .then(response => {
+          console.log(response.data.comments)
+          setComments(response.data.comments);
+        })
+        .catch(error => {
+          console.log(error)
+        })
       })
       .catch(error => {
         console.error(error);
@@ -87,10 +90,29 @@ const [showFullText, setShowFullText] = useState(Array(posts.length).fill(false)
    <Link key="addComment" to={`/addComment/${post.id}`} component={Link}>
     <Button size="small">Commenter</Button>
      </Link> 
-</Typography>
+      </Typography>
           </CardContent>
         </Card>
       ))}
+    { /* listes commentaires */}
+      <Typography variant="h4" style={{marginTop: '12px'}}>Commentaires {comments.length}</Typography>
+      {comments.map((comment, index)=> 
+          <Card key={index} sx={{ minWidth: 900 }} style={{marginTop: '4px'}}>
+            <CardContent>
+              <div style={{display: 'flex'}}>
+              <Avatar alt={comment.user.name}  style={{textTransform: 'capitalize'}} />
+              <span style={{marginLeft: '4px', textTransform: 'capitalize'}}>{comment.user.name}</span>
+              </div>
+              <Typography variant="body2">
+                {comment.comment}
+              </Typography>
+              <Typography variant="span">
+                {comment.created_at}
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+      
     </DashboardLayout>
   );
 };

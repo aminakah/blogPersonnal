@@ -7,12 +7,13 @@ import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
+import { PostService } from "services/post.service";
 
 export default function AllPostsTable() {
   const [posts, setPosts] = useState([]);
 
   async function getPosts() {
-    const response = await axios.get("http://127.0.0.1:8000/api/posts");
+    const response = PostService.getAllPosts()
     console.log(response.data)
     return response.data;
   }

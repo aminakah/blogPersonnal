@@ -28,6 +28,7 @@ import Footer from "examples/Footer";
 import Box from "@mui/material/Box";
 import Pagination from "@mui/lab/Pagination";
 import { Link } from 'react-router-dom';
+import Style from './Style.css';
 import {
   AppBar,
   Container,
@@ -37,6 +38,7 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
+import { PostService } from "services/post.service";
 
 function AllPost() {
   const [posts, setPosts] = useState([]);
@@ -45,7 +47,8 @@ function AllPost() {
   const [showFullText, setShowFullText] = useState(new Array(posts.length).fill(false));
 
   async function getPosts() {
-    const response = await axios.get("http://127.0.0.1:8000/api/allPosts");
+    const response = await PostService.getAllPosts();
+    console.log(response)
     return response.data;
   }
 

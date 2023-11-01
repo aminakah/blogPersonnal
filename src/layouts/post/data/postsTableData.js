@@ -7,12 +7,13 @@ import Icon from "@mui/material/Icon";
 import Swal from "sweetalert2";
 import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
+import { PostService } from "services/post.service";
 
 export default function PostsTable() {
   const [posts, setPosts] = useState([]);
 
   async function getPosts() {
-    const response = await axios.get("http://127.0.0.1:8000/api/posts");
+    const response = await PostService.getAllPosts();
     console.log(response.data)
     return response.data;
   }
@@ -54,7 +55,7 @@ export default function PostsTable() {
 
     rows: posts.map((post) => ({
       Title:  post.title,
-      Status: post.status ==0?"prive":"public",
+      Status: post.status == 1 ?"prive":"public",
       Action: [
         <Link key="edit" to={`/post/edit/${post.id}`} component={Link}>
           <MDButton variant="text" color="dark">
