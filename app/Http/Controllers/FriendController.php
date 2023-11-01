@@ -23,7 +23,7 @@ class FriendController extends Controller
         ->get();
 
     // Vous pouvez également inclure d'autres informations sur les amis si nécessaire
-   
+
 
     $amisAvecArticles = User::whereIn('id', $amis)
     ->with(['posts' => function ($query) {
@@ -63,33 +63,94 @@ public function addFriend(Request $request, $friendId)
     return response()->json(['message' => 'Ami ajouté avec succès.'], 200);
 }
 
+
+  public function getFriendRequest(){
+       $id = auth()->user()->id;
+        $users = DB::table('users as u')
+            ->join('friends as f', 'f.friend_id', '=', 'u.id')
+            ->where('f.user_id', $id)
+            ->where('f.accepted', false) // Add this line to filter by accepted friends
+            ->select('u.*')
+            ->get();
+        return response()->json($users);
+    }
+
+  public function getFriend(){
+       $id = auth()->user()->id;
+        $users = DB::table('users as u')
+            ->join('friends as f', 'f.friend_id', '=', 'u.id')
+            ->where('f.user_id', $id)
+            ->where('f.accepted', true) // Add this line to filter by accepted friends
+            ->select('u.*')
+            ->get();
+        return response()->json($users);
+    }
+
     public function listFriends(User $user)
     {
          $user = auth()->user();
         //  $friends = $user->friends;
-         $friends = $user->friends->pluck('friend.name'); 
+         $friends = $user->friends->pluck('friend.name');
         if ($friends->isEmpty()) {
                     return response()->json(['message' => 'L\'utilisateur n\'a pas d\'amis.'], 404);
                 }
          return response()->json(['friends' => $friends], 200);
     }
 
-   
-  
-    public function showFriendArticles($friendId)
+
+
+    public function showFriendArticles()
 {
     // Récupérez l'ami en fonction de son ID
-    $friend = User::find($friendId);
+    $userId = auth()->user()->id;
 
-    if (!$friend) {
-        return response()->json(['message' => 'L\'ami n\'existe pas.'], 404);
-    }
+
 
     // Récupérez les articles publics de l'ami
-    $publicArticles = $friend->posts()->where('status', true)->get();
+    $posts = DB::table('posts as p')
+        ->join('friends as f', 'p.user_id', '=', 'f.friend_id')
+        ->where('f.user_id', $userId)
+        ->select('p.*')
+        ->get();
 
-    return response()->json(['articles' => $publicArticles], 200);
+    return response()->json(['articles' => $posts], 200);
 }
 
-    
+
+    public function updateAccepted(Request $request, $id)
+        {
+            $friend = Friend::find($id);
+
+            if (!$friend) {
+                return response()->json(['message' => 'Friend not found'], 404);
+            }
+
+            $accepted = $request->input('accepted');
+
+            if ($accepted !== null) {
+                $friend->accepted = $accepted;
+                $friend->save();
+                return response()->json(['message' => 'Accepté avec succès'], 200);
+            } else {
+                return response()->json(['message' => 'Erreur acceptation'], 400);
+            }
+        }
+
+
+
+    public function delete($id)
+    {
+        $friend = Friend::find($id);
+
+        if (!$friend) {
+            return response()->json(['message' => 'Friend not found'], 404);
+        }
+
+        $friend->delete();
+
+        return response()->json(['message' => 'Friend deleted'], 200);
+    }
+
+
+
 }

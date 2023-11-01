@@ -34,14 +34,14 @@ use App\Http\Controllers\PermissionsController;
 //     return $request->user();
 // });
 
-// Public routes 
+// Public routes
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
 
 
 
 Route::group(['middleware'=>['auth:sanctum']],function(){
-    
+
     Route::get('/check-authentication', function () {
         $user = auth()->user();
         if ($user) {
@@ -50,20 +50,20 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
             return response()->json(['message' => 'User is not authenticated'], 401);
         }
     });
-    
+
     Route::post('/logout',[AuthController::class,'logout']);
 
-    //Permissions 
+    //Permissions
     Route::get('/permissions',[PermissionsController::class ,'index']);
 
     //User
     Route::get('/user',[UserController::class ,'index']);
     Route::get('/friend/{id}',[UserController::class ,'getFriend']);
     Route::post('/user/store',[UserController::class ,'store']);
-    Route::get('/user/{id}', [UserController::class, 'show']); 
+    Route::get('/user/{id}', [UserController::class, 'show']);
     Route::put('/user/update/{id}', [UserController::class, 'update']);
     Route::delete('/user/{id}', [UserController::class, 'destroy']);
-    Route::get("/rechercherUser",([UserController::class,"rechercherUser"]));
+    Route::get("/rechercherUser",([UserController::class,'rechercherUser']));
 
     // Post
     Route::get('/allPosts', [PostController::class, 'allPosts']);
@@ -79,23 +79,26 @@ Route::group(['middleware'=>['auth:sanctum']],function(){
     // Comment
     Route::get('/posts/{id}/comments', [CommentController::class, 'index']);
     Route::post('/posts/{id}/comments', [CommentController::class, 'store']);
-    Route::put('/comments/{id}', [CommentController::class, 'update']); 
-    Route::delete('/comments/{id}', [CommentController::class, 'destroy']); 
+    Route::put('/comments/{id}', [CommentController::class, 'update']);
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
 
     // Like
-    Route::post('/posts/{id}/likes', [LikeController::class, 'likeOrUnlike']); 
+    Route::post('/posts/{id}/likes', [LikeController::class, 'likeOrUnlike']);
 
 
     //friend
-    Route::post('/add-friend/{user}', [FriendController::class, 'sendFriend']); 
-    Route::post('/addFriend/{user}', [FriendController::class, 'addFriend']); 
-    Route::post('/a/{id}', [FriendController::class, 'accep']); 
-    Route::post('/PostFriend/{friend}', [FriendController::class, 'showFriendArticles']); 
-    Route::post('/decline-friend/{friend}', [FriendController::class, 'declineFriend']); 
-    Route::post('/friends', [FriendController::class, 'listFriends']); 
+    Route::post('/add-friend/{user}', [FriendController::class, 'sendFriend']);
+    Route::post('/addFriend/{user}', [FriendController::class, 'addFriend']);
+    Route::get('/get-friend', [FriendController::class, 'getFriend']);
+    Route::get('/get-friend-request', [FriendController::class, 'getFriendRequest']);
+    Route::post('/a/{id}', [FriendController::class, 'accep']);
+    Route::get('/postFriend', [FriendController::class, 'showFriendArticles']);
+    Route::put('/update-friend-accepted/{id}', [FriendController::class, 'updateAccepted']);
+    Route::post('/decline-friend/{friend}', [FriendController::class, 'declineFriend']);
+    Route::get('/friends', [FriendController::class, 'listFriends']);
     Route::get('postDeMesAmis',[FriendController::class,'getAmisArticles']);
 
-   
+
 
 });
 

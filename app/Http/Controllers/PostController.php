@@ -16,12 +16,12 @@ class PostController extends Controller
 
     public function allPosts(){
         $userId = auth()->user()->id;
-    
-        $publicPosts = Post::select('posts.*', 'users.name as author_name', DB::raw('"public" as status_text'))
-            ->leftJoin('users', 'posts.user_id', '=', 'users.id')
-            ->where('posts.status', 'public') // Filtrez les publications publiques
-            ->get();
-        
+
+        $publicPosts =  Post::join('users as u', 'posts.user_id', '=', 'u.id')
+                           ->where('posts.status', 1)
+                           ->get();
+
+
         return response()->json($publicPosts);
     }
     // get all posts
@@ -38,12 +38,12 @@ class PostController extends Controller
     public function postFriendPublic()
 {
     $userId = auth()->user()->id;
-    
+
     $publicPosts = Post::select('posts.*', 'users.name as author_name', DB::raw('"public" as status_text'))
         ->leftJoin('users', 'posts.user_id', '=', 'users.id')
         ->where('posts.status', 'public') // Filtrez les publications publiques
         ->get();
-    
+
     return response()->json($publicPosts);
 }
 
@@ -59,7 +59,7 @@ class PostController extends Controller
             ->get();
         return response()->json($postsWithAuthors);
     }
-   
+
 
     // get single post
     public function show($id)
@@ -111,7 +111,7 @@ class PostController extends Controller
         $post->save();
         return response()->json(['message' => 'Article ajouté avec succès'], 201);
     }
-  
+
     // update a post
     public function update(Request $request, $id)
     {

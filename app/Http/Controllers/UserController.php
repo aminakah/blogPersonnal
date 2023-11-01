@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public function rechercherUser(Request $request){
-        
+
         try {
 
             $query = User::query();
@@ -24,7 +24,7 @@ class UserController extends Controller
             }
             $total = $query->count();
             $resultat = $query->offset(($page -1) * $perPage)->limit($perPage)->get();
-    
+
 
             return response()->json([
                 'status_code'=>200,
@@ -90,8 +90,8 @@ class UserController extends Controller
         if ($user->update()) {
             return response()->json($user);
         }
-        
-        
+
+
     }
 
     /**
@@ -107,12 +107,6 @@ class UserController extends Controller
         return response()->json(['message' => 'User deleted successfully']);
     }
 
-    public function getFriend($id){
-        $users = DB::table('users as u')
-        ->join('friend as f', 'f.friend_id', '=', 'u.id')
-        ->where('f.id', $id)
-        ->select('u.*')
-        ->get();
-        return response()->json($users);
-    }
+
+
 }
